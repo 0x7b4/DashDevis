@@ -182,7 +182,6 @@ function sortTable(field) {
 
 function updateCharts() {
     updateStatusChart();
-    updateAmountChart();
 }
 
 function updateStatusChart() {
@@ -202,14 +201,21 @@ function updateStatusChart() {
             datasets: [{
                 data: [enEtude, valides, termines],
                 backgroundColor: ['#3b82f6', '#10b981', '#6b7280'],
-                borderWidth: 2,
+                borderWidth: 3,
                 borderColor: '#fff'
             }]
         },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             plugins: {
-                legend: { position: 'bottom' },
+                legend: { 
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: { size: 14, weight: '600' }
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: (ctx) => {
@@ -220,31 +226,6 @@ function updateStatusChart() {
                     }
                 }
             }
-        }
-    });
-}
-
-function updateAmountChart() {
-    const ctx = document.getElementById('amountChart');
-    if (!ctx) return;
-
-    if (charts.amount) charts.amount.destroy();
-
-    charts.amount = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['En étude', 'Validé', 'Terminé'],
-            datasets: [{
-                label: 'Montant (€)',
-                data: [0, 0, 0],
-                backgroundColor: ['#3b82f6', '#10b981', '#6b7280'],
-                borderRadius: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
         }
     });
 }
@@ -368,7 +349,7 @@ function setDefaultDate() {
 function showNotification(msg) {
     const n = document.createElement('div');
     n.textContent = msg;
-    n.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:15px 25px;border-radius:10px;z-index:10000;';
+    n.style.cssText = 'position:fixed;top:20px;right:20px;background:#10b981;color:white;padding:15px 25px;border-radius:10px;z-index:10000;box-shadow:0 10px 25px rgba(0,0,0,0.2);';
     document.body.appendChild(n);
     setTimeout(() => n.remove(), 3000);
 }
