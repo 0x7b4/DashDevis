@@ -1,0 +1,26 @@
+.charts-grid-single {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart-card-single {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    max-width: 500px;
+    width: 100%;
+}
+
+.chart-card-single:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 768px) {
+    .chart-card-single {
+        max-width: 100%;
+    }
+}
