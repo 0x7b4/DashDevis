@@ -1,5 +1,4 @@
 let devisData = [];
-let filteredData = [];
 let charts = {};
 let currentPage = 1;
 let limit = 10;
@@ -184,45 +183,44 @@ function updateCharts() {
     updateStatusChart();
 }
 
+// Remplacé par un graphique en barres
 function updateStatusChart() {
     const ctx = document.getElementById('statusChart');
     if (!ctx) return;
 
-    const enEtude = parseInt(document.getElementById('enEtude').textContent);
-    const valides = parseInt(document.getElementById('valides').textContent);
-    const termines = parseInt(document.getElementById('termines').textContent);
+    const enEtude = parseInt(document.getElementById('enEtude').textContent) || 0;
+    const valides = parseInt(document.getElementById('valides').textContent) || 0;
+    const termines = parseInt(document.getElementById('termines').textContent) || 0;
 
     if (charts.status) charts.status.destroy();
 
     charts.status = new Chart(ctx, {
-        type: 'doughnut',
+        type: 'bar',
         data: {
             labels: ['En étude', 'Validé', 'Terminé'],
             datasets: [{
+                label: 'Nombre de devis',
                 data: [enEtude, valides, termines],
                 backgroundColor: ['#3b82f6', '#10b981', '#6b7280'],
-                borderWidth: 3,
-                borderColor: '#fff'
+                borderRadius: 8
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
             plugins: {
-                legend: { 
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: { size: 14, weight: '600' }
-                    }
-                },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: (ctx) => {
-                            const total = ctx.dataset.data.reduce((a,b) => a+b, 0);
-                            const pct = ((ctx.parsed / total) * 100).toFixed(1);
-                            return `${ctx.label}: ${ctx.parsed} (${pct}%)`;
-                        }
+                        label: (ctx) => `${ctx.parsed.y} devis`
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
                     }
                 }
             }
