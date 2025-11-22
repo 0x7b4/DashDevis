@@ -24,7 +24,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: { 
         maxAge: 24 * 60 * 60 * 1000,
-        secure: false // false pour dev, true en prod avec HTTPS
+        secure: false
     }
 }));
 
@@ -52,7 +52,7 @@ if (!fs.existsSync(USERS_FILE)) {
     console.log('✅ Utilisateur admin créé: admin / admin123');
 }
 
-// Multer config
+// Multer
 const upload = multer({ dest: 'uploads/' });
 
 // Middleware auth
@@ -84,7 +84,10 @@ function loadUsers() {
     }
 }
 
-// Routes Auth
+// ============================================
+// ROUTES D'AUTHENTIFICATION (AVANT STATIC)
+// ============================================
+
 app.post('/api/auth/login', (req, res) => {
     const { username, password } = req.body;
 
@@ -135,10 +138,21 @@ app.get('/api/auth/check', (req, res) => {
     res.json({ authenticated: false });
 });
 
-// Middleware pour pages
+// ============================================
+// ROUTE /LOGIN (AVANT MIDDLEWARE)
+// ============================================
+
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// ============================================
+// MIDDLEWARE DE PROTECTION
+// ============================================
+
 app.use((req, res, next) => {
     // Routes publiques
-    if (req.path === '/login' || req.path === '/login.html' || req.path.startsWith('/api/auth')) {
+    if (req.path.startsWith('/api/auth')) {
         return next();
     }
 
@@ -147,17 +161,32 @@ app.use((req, res, next) => {
         return requireAuth(req, res, next);
     }
 
-    // Pages protégées
-    if (req.session && req.session.userId) {
-        return next();
-    }
-
-    res.redirect('/login');
+    // Fichiers statiques et pages
+    next();
 });
+
+// ============================================
+// STATIC FILES
+// ============================================
 
 app.use(express.static('public'));
 
-// Routes Devis
+// ============================================
+// REDIRECTION / VERS INDEX OU LOGIN
+// ============================================
+
+app.get('/', (req, res) => {
+    if (req.session && req.session.userId) {
+        res.sendFile(path.join(__dirname, 'public', 'index.html'));
+    } else {
+        res.redirect('/login');
+    }
+});
+
+// ============================================
+// ROUTES API DEVIS (PROTÉGÉES)
+// ============================================
+
 app.get('/api/devis', requireAuth, (req, res) => {
     let devis = loadData();
     const { search, statut, dateDebut, dateFin, page = 1, limit = 10 } = req.query;
@@ -319,7 +348,12 @@ app.get('/api/stats', requireAuth, (req, res) => {
     });
 });
 
+// ============================================
+// DÉMARRAGE SERVEUR
+// ============================================
+
 app.listen(PORT, () => {
     console.log(`🚀 DashDevis v2.2 - http://localhost:${PORT}`);
-    console.log(`🔐 Login: admin / admin123`);
+    console.log(`🔐 Login: http://localhost:${PORT}/login`);
+    console.log(`👤 Credentials: admin / admin123`);
 });
