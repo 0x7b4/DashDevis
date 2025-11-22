@@ -1,4 +1,5 @@
 let devisData = [];
+let charts = {}; // Stocker les instances de graphiques
 
 // Charger les données au démarrage
 document.addEventListener('DOMContentLoaded', () => {
@@ -13,6 +14,7 @@ async function loadDevis() {
         devisData = await response.json();
         renderTable();
         updateStats();
+        updateCharts();
     } catch (error) {
         console.error('Erreur lors du chargement des devis:', error);
         alert('Erreur lors du chargement des données');
@@ -56,10 +58,305 @@ function renderTable() {
 
 // Mettre à jour les statistiques
 function updateStats() {
+    const enEtude = devisData.filter(d => d.statut === 'En étude');
+    const valides = devisData.filter(d => d.statut === 'Validé');
+    const termines = devisData.filter(d => d.statut === 'Terminé');
+
+    const montantTotal = devisData.reduce((sum, d) => sum + parseFloat(d.montant || 0), 0);
+    const montantMoyen = devisData.length > 0 ? montantTotal / devisData.length : 0;
+
     document.getElementById('totalDevis').textContent = devisData.length;
-    document.getElementById('enEtude').textContent = devisData.filter(d => d.statut === 'En étude').length;
-    document.getElementById('valides').textContent = devisData.filter(d => d.statut === 'Validé').length;
-    document.getElementById('termines').textContent = devisData.filter(d => d.statut === 'Terminé').length;
+    document.getElementById('enEtude').textContent = enEtude.length;
+    document.getElementById('valides').textContent = valides.length;
+    document.getElementById('termines').textContent = termines.length;
+    document.getElementById('montantTotal').textContent = formatMontant(montantTotal);
+    document.getElementById('montantMoyen').textContent = formatMontant(montantMoyen);
+}
+
+// Mettre à jour tous les graphiques
+function updateCharts() {
+    updateStatusChart();
+    updateAmountChart();
+    updateTimelineChart();
+    updateGarageChart();
+    updateCompletionCircle();
+}
+
+// 1. Graphique Donut - Répartition par statut
+function updateStatusChart() {
+    const ctx = document.getElementById('statusChart');
+    if (!ctx) return;
+
+    const enEtude = devisData.filter(d => d.statut === 'En étude').length;
+    const valides = devisData.filter(d => d.statut === 'Validé').length;
+    const termines = devisData.filter(d => d.statut === 'Terminé').length;
+
+    if (charts.status) {
+        charts.status.destroy();
+    }
+
+    charts.status = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['En étude', 'Validé', 'Terminé'],
+            datasets: [{
+                data: [enEtude, valides, termines],
+                backgroundColor: [
+                    '#3b82f6', // Bleu
+                    '#10b981', // Vert
+                    '#6b7280'  // Gris
+                ],
+                borderWidth: 2,
+                borderColor: '#fff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12, weight: '600' }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = ((context.parsed / total) * 100).toFixed(1);
+                            return `${context.label}: ${context.parsed} (${percentage}%)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 2. Graphique Barres - Montants par statut
+function updateAmountChart() {
+    const ctx = document.getElementById('amountChart');
+    if (!ctx) return;
+
+    const enEtudeMontant = devisData
+        .filter(d => d.statut === 'En étude')
+        .reduce((sum, d) => sum + parseFloat(d.montant || 0), 0);
+
+    const validesMontant = devisData
+        .filter(d => d.statut === 'Validé')
+        .reduce((sum, d) => sum + parseFloat(d.montant || 0), 0);
+
+    const terminesMontant = devisData
+        .filter(d => d.statut === 'Terminé')
+        .reduce((sum, d) => sum + parseFloat(d.montant || 0), 0);
+
+    if (charts.amount) {
+        charts.amount.destroy();
+    }
+
+    charts.amount = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['En étude', 'Validé', 'Terminé'],
+            datasets: [{
+                label: 'Montant (€)',
+                data: [enEtudeMontant, validesMontant, terminesMontant],
+                backgroundColor: [
+                    '#3b82f6',
+                    '#10b981',
+                    '#6b7280'
+                ],
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Montant: ${formatMontant(context.parsed.y)}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString('fr-FR') + ' €';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 3. Graphique Ligne - Évolution temporelle
+function updateTimelineChart() {
+    const ctx = document.getElementById('timelineChart');
+    if (!ctx) return;
+
+    // Grouper par mois
+    const monthlyData = {};
+
+    devisData.forEach(devis => {
+        const date = new Date(devis.date);
+        const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+        if (!monthlyData[monthKey]) {
+            monthlyData[monthKey] = {
+                enEtude: 0,
+                valide: 0,
+                termine: 0,
+                total: 0
+            };
+        }
+
+        if (devis.statut === 'En étude') monthlyData[monthKey].enEtude++;
+        else if (devis.statut === 'Validé') monthlyData[monthKey].valide++;
+        else if (devis.statut === 'Terminé') monthlyData[monthKey].termine++;
+
+        monthlyData[monthKey].total++;
+    });
+
+    // Trier par date
+    const sortedMonths = Object.keys(monthlyData).sort();
+
+    const labels = sortedMonths.map(month => {
+        const [year, m] = month.split('-');
+        const monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+        return `${monthNames[parseInt(m) - 1]} ${year}`;
+    });
+
+    if (charts.timeline) {
+        charts.timeline.destroy();
+    }
+
+    charts.timeline = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'En étude',
+                    data: sortedMonths.map(m => monthlyData[m].enEtude),
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Validé',
+                    data: sortedMonths.map(m => monthlyData[m].valide),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'Terminé',
+                    data: sortedMonths.map(m => monthlyData[m].termine),
+                    borderColor: '#6b7280',
+                    backgroundColor: 'rgba(107, 114, 128, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        padding: 15,
+                        font: { size: 12, weight: '600' }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+}
+
+// 4. Graphique Barres Horizontales - Top 5 Garages
+function updateGarageChart() {
+    const ctx = document.getElementById('garageChart');
+    if (!ctx) return;
+
+    // Compter les devis par garage
+    const garageCount = {};
+    devisData.forEach(devis => {
+        const garage = devis.garage || 'Non spécifié';
+        garageCount[garage] = (garageCount[garage] || 0) + 1;
+    });
+
+    // Top 5 garages
+    const sortedGarages = Object.entries(garageCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5);
+
+    if (charts.garage) {
+        charts.garage.destroy();
+    }
+
+    charts.garage = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: sortedGarages.map(g => g[0]),
+            datasets: [{
+                label: 'Nombre de devis',
+                data: sortedGarages.map(g => g[1]),
+                backgroundColor: '#667eea',
+                borderRadius: 8
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1 }
+                }
+            }
+        }
+    });
+}
+
+// 5. Cercle de Progression - Taux de complétion
+function updateCompletionCircle() {
+    const total = devisData.length;
+    const termines = devisData.filter(d => d.statut === 'Terminé').length;
+    const percentage = total > 0 ? (termines / total) * 100 : 0;
+
+    const circle = document.getElementById('progressCircle');
+    const text = document.getElementById('progressText');
+
+    if (circle && text) {
+        const circumference = 2 * Math.PI * 45; // rayon = 45
+        const offset = circumference - (percentage / 100) * circumference;
+
+        circle.style.strokeDashoffset = offset;
+        text.textContent = `${percentage.toFixed(0)}%`;
+    }
 }
 
 // Afficher le modal pour ajouter un devis
@@ -107,14 +404,12 @@ async function saveDevis(event) {
     try {
         let response;
         if (id) {
-            // Mise à jour
             response = await fetch(`/api/devis/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(devisData)
             });
         } else {
-            // Création
             response = await fetch('/api/devis', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -205,7 +500,6 @@ async function importCSV(event) {
         alert('Erreur lors de l\'import CSV');
     }
 
-    // Réinitialiser l'input file
     event.target.value = '';
 }
 
