@@ -119,20 +119,6 @@ Utilisez les identifiants par défaut :
 
 ---
 
-## 🌐 Déploiement sur Render.com
-
-### Configuration Automatique
-
-Le fichier `render.yaml` configure automatiquement le déploiement.
-
-### Étapes
-
-1. **Créer un compte** sur [render.com](https://render.com)
-2. **Connectez votre repo GitHub** : 0x7b4/DashDevis
-3. **Déployez en 1 clic** (configuration auto-détectée)
-4. **Attendez 2-3 minutes**
-5. **Accédez à votre URL** : `https://dashdevis-xxxx.onrender.com`
-
 ### Variables d'Environnement (Optionnel)
 
 ```bash
@@ -582,7 +568,6 @@ MIT License - Vous êtes libre d'utiliser, modifier et distribuer ce projet.
 ## 🔗 Liens Utiles
 
 - **Repository** : [github.com/0x7b4/DashDevis](https://github.com/0x7b4/DashDevis)
-- **Render** : [dashboard.render.com](https://dashboard.render.com)
 - **Chart.js** : [chartjs.org](https://www.chartjs.org/)
 - **Express** : [expressjs.com](https://expressjs.com/)
 
