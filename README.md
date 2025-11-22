@@ -1,106 +1,70 @@
-# 📊 DashDevis - Dashboard Professionnel de Gestion de Devis
+# 📊 DashDevis v2.2 - Dashboard Professionnel de Gestion de Devis
 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
-![Express](https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white)
-![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=for-the-badge&logo=chartdotjs&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![Version](https://img.shields.io/badge/version-2.2.0-blue)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?style=flat&logo=chartdotjs&logoColor=white)
 
-Application web Node.js complète pour gérer vos devis automobiles avec une interface moderne, des graphiques KPI interactifs et une analyse en temps réel.
-
----
-
-## 📸 Aperçu
-
-### Interface Principale
-- **Dashboard moderne** avec design gradient violet/bleu
-- **Tableau de gestion** complet avec actions (éditer/supprimer)
-- **Statistiques en temps réel** (6 indicateurs)
-- **Graphiques KPI interactifs** (Chart.js)
-- **Interface responsive** (mobile, tablette, desktop)
+Application web Node.js complète pour gérer vos devis avec **authentification**, **filtres avancés**, **recherche**, **tri** et **pagination**.
 
 ---
 
-## ✨ Fonctionnalités Principales
+## 🆕 Nouveautés Version 2.2
 
-### 📋 Gestion Complète des Devis
+### 🔐 Authentification Utilisateur
+- ✅ Page de connexion sécurisée
+- ✅ Sessions persistantes (24 heures)
+- ✅ Mots de passe hashés avec bcryptjs
+- ✅ Protection de toutes les routes API
+- 🔑 **Identifiants par défaut** : `admin` / `admin123`
 
-#### ✅ CRUD Complet
-- **Créer** un nouveau devis via formulaire modal élégant
-- **Lire** tous les devis dans un tableau responsive
-- **Modifier** un devis existant en 1 clic
-- **Supprimer** un devis avec confirmation de sécurité
+### 🔍 Recherche & Filtres
+- ✅ **Recherche globale** instantanée (N° Sinistre, N° OR, Garage, Commentaires)
+- ✅ **Filtre par statut** : Tous / En étude / Validé / Terminé
+- ✅ **Filtre par date** : Début et fin
+- ✅ Bouton **Réinitialiser** pour tout effacer
 
-#### 💾 Sauvegarde Automatique
-- Toutes les modifications sont **automatiquement sauvegardées**
-- Stockage en JSON local (`data/devis.json`)
-- Pas de base de données requise pour démarrer
-- Migration facile vers PostgreSQL/MongoDB si besoin
+### ⬆️⬇️ Tri par Colonnes
+- ✅ Cliquez sur n'importe quel en-tête de colonne
+- ✅ Tri ascendant/descendant
+- ✅ Tri sur : Date, N° Sinistre, N° OR, Garage, Montant, Statut
 
-#### 📥 Export CSV
-- **Exportez tous vos devis** au format CSV
-- Encodage **UTF-8 avec BOM** (compatible Excel)
-- Séparateur point-virgule (`;`)
-- Nom de fichier avec date : `devis_export_2025-11-22.csv`
+### 📄 Pagination
+- ✅ 10 devis par page (configurable)
+- ✅ Navigation Précédent/Suivant
+- ✅ Saut rapide entre pages
+- ✅ Indicateur "Page X / Y (Total devis)"
 
-#### 📤 Import CSV
-- **Importez des devis en masse** depuis un fichier CSV
-- Détection automatique des colonnes
-- Gestion des erreurs avec messages clairs
-- Compatible avec exports Excel
+---
 
-### 📊 Graphiques KPI Interactifs (Chart.js)
+## ✨ Fonctionnalités Complètes
 
-#### 1️⃣ Graphique Donut - Répartition par Statut
-Visualisez en un coup d'œil la distribution de vos devis :
-- 🔵 **En étude** (bleu)
-- 🟢 **Validé** (vert)
-- ⚫ **Terminé** (gris)
+### 📋 Gestion des Devis
+- **CRUD complet** : Créer, Lire, Modifier, Supprimer
+- **Sauvegarde automatique** en JSON
+- **Import/Export CSV** avec encodage UTF-8
+- **Notifications toast** pour chaque action
+- **Traçabilité** : createdBy, updatedBy, timestamps
 
-**Fonctionnalités :**
-- Pourcentages calculés automatiquement
-- Légende interactive (cliquez pour masquer/afficher)
-- Tooltips avec détails au survol
-- Animation fluide au chargement
+### 📊 Graphiques KPI (Chart.js)
+- **Donut** : Répartition par statut avec pourcentages
+- **Barres** : Montants totaux par statut
 
-#### 2️⃣ Graphique Barres - Montants par Statut
-Comparez les montants totaux en euros pour chaque catégorie :
-- Vue claire des montants par statut
-- Barres colorées avec coins arrondis
-- Échelle Y formatée en euros
-- Tooltips avec montants formatés
+### 📈 Statistiques Temps Réel
+| Indicateur | Description |
+|------------|-------------|
+| Total Devis | Nombre total enregistré |
+| En Étude | Devis en cours d'analyse |
+| Validés | Devis approuvés |
+| Terminés | Devis complétés |
+| Montant Total | Somme de tous les montants (€) |
+| Montant Moyen | Moyenne par devis (€) |
 
-### 📈 Statistiques en Temps Réel
-
-Le dashboard affiche **6 indicateurs clés** qui se mettent à jour automatiquement :
-
-| Indicateur | Description | Icône |
-|------------|-------------|-------|
-| **Total Devis** | Nombre total de devis enregistrés | 📊 |
-| **En Étude** | Devis en cours d'analyse | 🔵 |
-| **Validés** | Devis approuvés | 🟢 |
-| **Terminés** | Devis complétés | ⚫ |
-| **Montant Total** | Somme de tous les montants (€) | 💰 |
-| **Montant Moyen** | Moyenne par devis (€) | 📊 |
-
-### 🎨 Design & Interface
-
-#### Interface Moderne
-- **Gradient violet/bleu** pour le header
-- **Cards avec ombres** pour les statistiques
+### 🎨 Interface Moderne
+- Design **responsive** (mobile, tablette, desktop)
+- Gradient **violet/bleu** élégant
 - **Animations fluides** sur tous les éléments
 - **Badges colorés** pour les statuts
-- **Notifications toast** pour les actions
-
-#### Responsive Design
-- **Desktop** : Vue complète avec grille de graphiques
-- **Tablette** : Adaptation automatique des colonnes
-- **Mobile** : Navigation optimisée, tableau scrollable
-
-#### Accessibilité
-- Formulaires avec labels clairs
-- Boutons avec icônes et texte
-- Messages d'erreur explicites
-- Confirmations avant suppression
 
 ---
 
@@ -110,34 +74,23 @@ Le dashboard affiche **6 indicateurs clés** qui se mettent à jour automatiquem
 
 | Colonne | Type | Description | Exemple |
 |---------|------|-------------|---------|
-| **Date** | Date | Date du devis | 15/01/2025 |
-| **N° de Sinistre** | Texte | Numéro de sinistre | SIN001 |
-| **N° OR** | Texte | Numéro d'ordre de réparation | OR123 |
-| **Garage** | Texte | Nom du garage | Garage Martin |
-| **Montant** | Nombre | Montant en euros | 1 500,50 € |
-| **Statut** | Énumération | En étude / Validé / Terminé | Validé |
-| **Commentaires** | Texte | Notes et commentaires | Premier devis |
-| **Actions** | Boutons | Éditer ✏️ / Supprimer 🗑️ | - |
-
-### États des Statuts
-
-```javascript
-Statuts possibles :
-├── "En étude"   → Badge bleu (devis en analyse)
-├── "Validé"     → Badge vert (devis approuvé)
-└── "Terminé"    → Badge gris (devis complété)
-```
+| Date | Date | Date du devis | 22/11/2025 |
+| N° de Sinistre | Texte | Numéro de sinistre | SIN001 |
+| N° OR | Texte | Numéro d'ordre | OR123 |
+| Garage | Texte | Nom du garage | Garage Martin |
+| Montant | Nombre | Montant en € | 1 500,50 € |
+| Statut | Énumération | En étude / Validé / Terminé | Validé |
+| Commentaires | Texte | Notes | Premier devis |
+| Actions | Boutons | ✏️ Éditer / 🗑️ Supprimer | - |
 
 ---
 
-## 🚀 Installation et Démarrage
+## 🚀 Installation Rapide
 
 ### Prérequis
-
-- **Node.js** version 14 ou supérieure
-- **npm** ou **yarn**
-- Un éditeur de code (VSCode recommandé)
-- Git installé
+- Node.js v14+ 
+- npm ou yarn
+- Git
 
 ### Installation Locale
 
@@ -156,89 +109,43 @@ npm start
 # http://localhost:3000
 ```
 
-### Mode Développement
+### Première Connexion
 
-Pour le développement avec rechargement automatique :
+Utilisez les identifiants par défaut :
+- **Username** : `admin`
+- **Password** : `admin123`
 
-```bash
-npm run dev
-```
-
-Le serveur redémarrera automatiquement à chaque modification de fichier.
-
-### Configuration du Port
-
-Par défaut, le serveur démarre sur le port **3000**. Pour changer :
-
-```bash
-# Windows
-set PORT=8080 && npm start
-
-# Linux/Mac
-PORT=8080 npm start
-```
+⚠️ **Important** : Changez ces identifiants en production !
 
 ---
 
 ## 🌐 Déploiement sur Render.com
 
-### Étape 1 : Créer un compte (gratuit)
+### Configuration Automatique
 
-1. Allez sur **[render.com](https://render.com)**
-2. Cliquez sur **"Get Started for Free"**
-3. Connectez-vous avec votre compte **GitHub**
+Le fichier `render.yaml` configure automatiquement le déploiement.
 
-### Étape 2 : Déployer l'application
+### Étapes
 
-1. Dans le dashboard, cliquez sur **"New +"** → **"Web Service"**
-2. Autorisez Render à accéder à vos repositories GitHub
-3. Sélectionnez le repository **"DashDevis"**
-4. Configuration automatique détectée via `render.yaml` :
-   - **Name** : `dashdevis` (ou personnalisé)
-   - **Region** : Frankfurt / Oregon (choisissez la plus proche)
-   - **Branch** : `main`
-   - **Build Command** : `npm install` ✅
-   - **Start Command** : `npm start` ✅
-   - **Instance Type** : **Free** (750h/mois)
-5. Cliquez sur **"Create Web Service"**
+1. **Créer un compte** sur [render.com](https://render.com)
+2. **Connectez votre repo GitHub** : 0x7b4/DashDevis
+3. **Déployez en 1 clic** (configuration auto-détectée)
+4. **Attendez 2-3 minutes**
+5. **Accédez à votre URL** : `https://dashdevis-xxxx.onrender.com`
 
-### Étape 3 : Attendre le déploiement
+### Variables d'Environnement (Optionnel)
 
-**Durée estimée :** 2-3 minutes
-
-Render va :
-- ✅ Cloner votre repository
-- ✅ Installer les dépendances
-- ✅ Démarrer le serveur Node.js
-- ✅ Générer une URL publique HTTPS
-
-### URL de Production
-
-Votre application sera accessible sur :
-```
-https://dashdevis-xxxx.onrender.com
+```bash
+NODE_ENV=production
+PORT=3000
+SESSION_SECRET=votre-secret-unique-ici
 ```
 
-### Déploiement Automatique
-
-Chaque fois que vous faites un `git push` sur la branche `main` :
-- Render **détecte automatiquement** le nouveau commit
-- Redéploie l'application **automatiquement**
-- Votre site est à jour en **2-3 minutes**
-
-### Notes Importantes
-
-⚠️ **Plan Gratuit Render :**
-- Instance se met en **veille après 15 minutes** d'inactivité
-- Premier accès après veille : **30-60 secondes** de chargement
-- Limite : **750 heures/mois** (suffisant pour usage personnel)
-
-💾 **Données Éphémères :**
-- Le fichier `data/devis.json` est **réinitialisé** à chaque redémarrage
-- Pour persistance, ajoutez un **disque Render** (1GB gratuit) :
-  1. Onglet **"Disks"** → **"Add Disk"**
-  2. Mount Path : `/app/data`
-  3. Taille : 1GB
+### Plan Gratuit Render
+- ✅ 750 heures/mois
+- ✅ SSL automatique (HTTPS)
+- ✅ Déploiement automatique sur git push
+- ⚠️ Mise en veille après 15 min d'inactivité
 
 ---
 
@@ -248,26 +155,20 @@ Chaque fois que vous faites un `git push` sur la branche `main` :
 
 | Package | Version | Description |
 |---------|---------|-------------|
-| **express** | ^4.18.2 | Framework web minimaliste |
-| **body-parser** | ^1.20.2 | Parser pour requêtes HTTP |
-| **csv-parser** | ^3.0.0 | Lecture de fichiers CSV |
-| **json2csv** | ^6.0.0-alpha.2 | Conversion JSON → CSV |
-| **multer** | ^1.4.5-lts.1 | Upload de fichiers |
+| express | ^4.18.2 | Framework web |
+| body-parser | ^1.20.2 | Parser HTTP |
+| express-session | ^1.17.3 | ✨ Gestion sessions |
+| bcryptjs | ^2.4.3 | ✨ Hash mots de passe |
+| csv-parser | ^3.0.0 | Lecture CSV |
+| json2csv | ^6.0.0 | Export CSV |
+| multer | ^1.4.5 | Upload fichiers |
 
 ### Frontend
 
-| Technologie | Version | Usage |
-|-------------|---------|-------|
-| **Chart.js** | 4.4.0 (CDN) | Graphiques interactifs |
-| **HTML5** | - | Structure |
-| **CSS3** | - | Design & animations |
-| **JavaScript (ES6)** | - | Logique métier |
-
-### Développement
-
-| Package | Version | Description |
-|---------|---------|-------------|
-| **nodemon** | ^3.0.1 | Rechargement automatique |
+- **Chart.js** 4.4.0 (CDN) - Graphiques interactifs
+- **HTML5** - Structure
+- **CSS3** - Design & animations
+- **JavaScript ES6** - Logique
 
 ---
 
@@ -275,90 +176,96 @@ Chaque fois que vous faites un `git push` sur la branche `main` :
 
 ```
 DashDevis/
-├── server.js                 # ⚙️ Serveur Express + API REST
+├── server.js                 # ⚙️ Serveur Express + Auth + API
 ├── package.json              # 📦 Configuration npm
-├── package-lock.json         # 🔒 Versions exactes des dépendances
-├── render.yaml              # 🚀 Configuration Render.com
-├── README.md                # 📖 Documentation (ce fichier)
-├── DEPLOYMENT_GUIDE.md      # 📘 Guide de déploiement détaillé
-├── .gitignore              # 🙈 Fichiers ignorés par Git
-├── data/                   # 💾 Dossier de données
-│   └── devis.json         # 📄 Fichier JSON (créé automatiquement)
-├── public/                # 🌐 Fichiers statiques
-│   ├── index.html        # 📄 Interface utilisateur
+├── render.yaml              # 🚀 Config Render.com
+├── README.md                # 📖 Documentation
+├── DEPLOYMENT_GUIDE.md      # 📘 Guide déploiement
+├── .gitignore              # 🙈 Fichiers ignorés
+├── data/                   # 💾 Données
+│   ├── devis.json         # 📄 Base de données JSON
+│   └── users.json         # 👥 Utilisateurs (créé auto)
+├── public/                # 🌐 Frontend
+│   ├── login.html        # 🔐 Page de connexion
+│   ├── index.html        # 📄 Dashboard principal
 │   ├── styles.css        # 🎨 Styles CSS
-│   └── script.js         # ⚡ Logique JavaScript + Chart.js
-└── uploads/              # 📤 Dossier temporaire (imports CSV)
+│   └── script-v2.2.js    # ⚡ Logique JavaScript
+└── uploads/              # 📤 Temporaire (imports CSV)
 ```
-
-### Détails des Fichiers Principaux
-
-#### `server.js`
-Serveur Express avec :
-- Routes API REST complètes (GET, POST, PUT, DELETE)
-- Gestion des imports/exports CSV
-- Middleware body-parser et multer
-- Sauvegarde automatique JSON
-- Gestion des erreurs
-
-#### `public/index.html`
-Interface utilisateur avec :
-- Header responsive
-- 6 cartes statistiques
-- 2 graphiques Chart.js (Donut + Barres)
-- Tableau de données dynamique
-- Modal d'édition/création
-
-#### `public/script.js`
-Logique frontend :
-- Chargement des données via API
-- Mise à jour des graphiques Chart.js
-- Gestion du formulaire modal
-- Import/Export CSV
-- Notifications toast
-
-#### `public/styles.css`
-Design moderne :
-- Gradient violet/bleu
-- Cards avec ombres
-- Animations CSS
-- Responsive design
-- Badges colorés
 
 ---
 
-## 🔌 API REST Complète
+## 🔌 API REST
 
-### Endpoints Disponibles
+### Authentification
 
-#### 📋 Gestion des Devis
-
-**Liste tous les devis**
+#### Connexion
 ```http
-GET /api/devis
+POST /api/auth/login
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "password": "admin123"
+}
 ```
-**Réponse :**
+
+**Réponse** :
 ```json
-[
-  {
-    "id": "1732270123456",
-    "date": "2025-01-15",
-    "numeroSinistre": "SIN001",
-    "numeroOR": "OR123",
-    "garage": "Garage Martin",
-    "montant": "1500.50",
-    "statut": "Validé",
-    "commentaires": "Premier devis"
+{
+  "success": true,
+  "user": {
+    "id": "1",
+    "username": "admin",
+    "email": "admin@dashdevis.com"
   }
-]
+}
 ```
 
-**Récupérer un devis spécifique**
+#### Vérifier Session
 ```http
-GET /api/devis/:id
+GET /api/auth/check
 ```
 
-**Créer un nouveau devis**
+#### Déconnexion
+```http
+POST /api/auth/logout
+```
+
+### Gestion des Devis (Protégées 🔒)
+
+#### Liste avec Filtres & Pagination
+```http
+GET /api/devis?page=1&limit=10&search=garage&statut=Validé&dateDebut=2025-01-01
+```
+
+**Réponse** :
+```json
+{
+  "data": [
+    {
+      "id": "1732270123456",
+      "date": "2025-01-15",
+      "numeroSinistre": "SIN001",
+      "numeroOR": "OR123",
+      "garage": "Garage Martin",
+      "montant": "1500.50",
+      "statut": "Validé",
+      "commentaires": "Premier devis",
+      "createdBy": "admin",
+      "createdAt": "2025-11-22T10:00:00.000Z"
+    }
+  ],
+  "pagination": {
+    "total": 45,
+    "page": 1,
+    "limit": 10,
+    "totalPages": 5
+  }
+}
+```
+
+#### Créer un Devis
 ```http
 POST /api/devis
 Content-Type: application/json
@@ -374,388 +281,318 @@ Content-Type: application/json
 }
 ```
 
-**Mettre à jour un devis**
+#### Modifier un Devis
 ```http
 PUT /api/devis/:id
 Content-Type: application/json
 
 {
-  "statut": "Validé",
-  "commentaires": "Devis approuvé"
+  "statut": "Validé"
 }
 ```
 
-**Supprimer un devis**
+#### Supprimer un Devis
 ```http
 DELETE /api/devis/:id
 ```
 
-#### 📥📤 Import/Export CSV
+#### Statistiques
+```http
+GET /api/stats
+```
 
-**Exporter tous les devis en CSV**
+**Réponse** :
+```json
+{
+  "total": 45,
+  "enEtude": 12,
+  "valides": 18,
+  "termines": 15,
+  "montantTotal": 67500.00,
+  "montantMoyen": 1500.00
+}
+```
+
+### Import/Export
+
+#### Export CSV
 ```http
 GET /api/export/csv
 ```
-**Réponse :** Téléchargement fichier `devis_export_2025-11-22.csv`
 
-**Importer des devis depuis CSV**
+#### Import CSV
 ```http
 POST /api/import/csv
 Content-Type: multipart/form-data
 
-file: [fichier CSV]
-```
-
-### Exemples avec cURL
-
-**Créer un devis :**
-```bash
-curl -X POST http://localhost:3000/api/devis \
-  -H "Content-Type: application/json" \
-  -d '{
-    "date": "2025-01-15",
-    "numeroSinistre": "SIN001",
-    "numeroOR": "OR123",
-    "garage": "Garage Martin",
-    "montant": 1500.50,
-    "statut": "En étude",
-    "commentaires": "Nouveau devis"
-  }'
-```
-
-**Lister les devis :**
-```bash
-curl http://localhost:3000/api/devis
-```
-
-**Mettre à jour un devis :**
-```bash
-curl -X PUT http://localhost:3000/api/devis/1732270123456 \
-  -H "Content-Type: application/json" \
-  -d '{"statut": "Validé"}'
-```
-
-**Supprimer un devis :**
-```bash
-curl -X DELETE http://localhost:3000/api/devis/1732270123456
+file: [fichier.csv]
 ```
 
 ---
 
-## 📄 Format CSV pour Import/Export
+## 📄 Format CSV
 
-### Structure du Fichier CSV
-
-Le fichier CSV doit respecter ce format :
+### Structure
 
 ```csv
 date;numeroSinistre;numeroOR;garage;montant;statut;commentaires
 2025-01-15;SIN001;OR123;Garage Martin;1500.50;En étude;Premier devis
 2025-01-16;SIN002;OR124;Garage Dupont;2300.00;Validé;Deuxième devis
-2025-01-17;SIN003;OR125;Garage Bernard;1800.75;Terminé;Troisième devis
 ```
 
-### Spécifications Techniques
-
+### Spécifications
 - **Séparateur** : Point-virgule (`;`)
-- **Encodage** : UTF-8 avec BOM (pour Excel)
-- **Format de date** : YYYY-MM-DD
-- **Format de montant** : Nombre décimal avec point ou virgule
-- **Statuts autorisés** : `En étude`, `Validé`, `Terminé`
-- **Première ligne** : En-têtes de colonnes
-
-### Exemple Complet
-
-```csv
-date;numeroSinistre;numeroOR;garage;montant;statut;commentaires
-2025-01-10;SIN001;OR100;Garage Auto Plus;1245.00;En étude;Réparation pare-chocs
-2025-01-11;SIN002;OR101;Garage Rapide;890.50;Validé;Changement pneus
-2025-01-12;SIN003;OR102;Garage Martin;3450.00;Terminé;Réparation moteur
-2025-01-13;SIN004;OR103;Garage Dupont;567.80;En étude;Révision complète
-2025-01-14;SIN005;OR104;Garage Pro;2100.00;Validé;Carrosserie
-```
+- **Encodage** : UTF-8 avec BOM
+- **Format date** : YYYY-MM-DD
+- **Format montant** : Nombre décimal
+- **Statuts** : `En étude`, `Validé`, `Terminé`
 
 ---
 
 ## 🛠️ Guide d'Utilisation
 
-### 1️⃣ Créer un Devis
+### 1️⃣ Connexion
+1. Ouvrez l'application
+2. Entrez : `admin` / `admin123`
+3. Cliquez sur "Se connecter"
 
-1. Cliquez sur le bouton **"➕ Nouveau Devis"**
-2. Remplissez le formulaire modal :
-   - **Date** : Sélectionnez la date (aujourd'hui par défaut)
-   - **N° de Sinistre** : Entrez le numéro
-   - **N° OR** : Entrez le numéro d'ordre
-   - **Garage** : Nom du garage
-   - **Montant** : Montant en euros
-   - **Statut** : Choisissez dans la liste déroulante
-   - **Commentaires** : Notes optionnelles
-3. Cliquez sur **"Enregistrer"**
-4. Le devis apparaît dans le tableau et les graphiques se mettent à jour
+### 2️⃣ Rechercher des Devis
+1. Tapez dans la barre de recherche
+2. Résultats instantanés sur tous les champs
 
-### 2️⃣ Modifier un Devis
+### 3️⃣ Filtrer par Statut
+1. Sélectionnez un statut dans la liste déroulante
+2. Les résultats se mettent à jour automatiquement
 
-1. Dans le tableau, cliquez sur l'icône **✏️ Éditer**
-2. Le formulaire modal s'ouvre avec les données pré-remplies
-3. Modifiez les champs souhaités
-4. Cliquez sur **"Enregistrer"**
-5. Les changements sont appliqués immédiatement
+### 4️⃣ Filtrer par Date
+1. Choisissez une date de début
+2. Choisissez une date de fin (optionnel)
+3. Seuls les devis dans cette période s'affichent
 
-### 3️⃣ Supprimer un Devis
+### 5️⃣ Trier les Colonnes
+1. Cliquez sur n'importe quel en-tête de colonne
+2. Premier clic : tri ascendant ⬆️
+3. Deuxième clic : tri descendant ⬇️
 
-1. Dans le tableau, cliquez sur l'icône **🗑️ Supprimer**
-2. Une confirmation apparaît : **"Êtes-vous sûr ?"**
-3. Confirmez pour supprimer définitivement
-4. Le devis est retiré du tableau et des graphiques
+### 6️⃣ Naviguer entre Pages
+1. Utilisez les boutons "Précédent" / "Suivant"
+2. Ou cliquez directement sur un numéro de page
 
-### 4️⃣ Exporter en CSV
+### 7️⃣ Créer un Devis
+1. Cliquez sur "➕ Nouveau"
+2. Remplissez le formulaire
+3. Cliquez sur "Enregistrer"
 
-1. Cliquez sur **"📥 Exporter CSV"**
-2. Le fichier `devis_export_YYYY-MM-DD.csv` est téléchargé
-3. Ouvrez-le avec Excel, LibreOffice ou un éditeur de texte
-4. Les données sont formatées avec séparateur `;` et encodage UTF-8
+### 8️⃣ Modifier un Devis
+1. Cliquez sur ✏️ dans la colonne Actions
+2. Modifiez les champs
+3. Cliquez sur "Enregistrer"
 
-### 5️⃣ Importer depuis CSV
+### 9️⃣ Supprimer un Devis
+1. Cliquez sur 🗑️ dans la colonne Actions
+2. Confirmez la suppression
 
-1. Préparez votre fichier CSV selon le format indiqué
-2. Cliquez sur **"📤 Importer CSV"**
-3. Sélectionnez votre fichier
-4. Les devis sont ajoutés automatiquement
-5. Une notification indique le nombre de devis importés
+### 🔟 Déconnexion
+1. Cliquez sur "🚪 Déconnexion"
+2. Vous êtes redirigé vers la page de login
 
-### 6️⃣ Analyser les KPI
+---
 
-Les graphiques se mettent à jour automatiquement après chaque action :
+## 🔐 Sécurité
 
-**Graphique Donut :**
-- Survolez pour voir les pourcentages
-- Cliquez sur la légende pour masquer/afficher un statut
+### Recommandations pour la Production
 
-**Graphique Barres :**
-- Compare visuellement les montants par statut
-- Survolez pour voir le montant exact formaté
+⚠️ **IMPORTANT** : Changez les identifiants par défaut !
+
+1. **Modifier le mot de passe admin**
+   - Éditez `data/users.json`
+   - Générez un nouveau hash bcrypt
+
+2. **Changer la clé de session**
+   ```javascript
+   // Dans server.js
+   secret: process.env.SESSION_SECRET || 'votre-secret-unique'
+   ```
+
+3. **Utiliser HTTPS**
+   - Render fournit SSL automatiquement
+   - En local, utilisez un reverse proxy (nginx)
+
+4. **Variables d'environnement**
+   ```bash
+   export SESSION_SECRET=super-secret-unique-key
+   export NODE_ENV=production
+   ```
+
+5. **Limiter les tentatives de connexion**
+   - Ajouter express-rate-limit (futur)
+
+6. **Base de données**
+   - Migrer vers PostgreSQL/MongoDB pour production
 
 ---
 
 ## 🎨 Personnalisation
 
-### Modifier les Couleurs
+### Changer les Couleurs
 
 Éditez `public/styles.css` :
 
 ```css
-/* Gradient principal du header */
+/* Gradient principal */
 header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* Couleurs des statuts */
-.status-etude { background: #dbeafe; color: #1e40af; }
-.status-valide { background: #d1fae5; color: #065f46; }
-.status-termine { background: #e5e7eb; color: #374151; }
-
-/* Couleurs des graphiques Chart.js */
+/* Couleurs graphiques */
 backgroundColor: ['#3b82f6', '#10b981', '#6b7280']
 ```
 
-### Ajouter de Nouvelles Statistiques
+### Modifier le Nombre d'Éléments par Page
 
-Dans `public/script.js`, fonction `updateStats()` :
+Dans `public/script-v2.2.js` :
 
 ```javascript
-// Exemple : Calculer le montant maximum
-const montantMax = Math.max(...devisData.map(d => parseFloat(d.montant)));
-document.getElementById('montantMax').textContent = formatMontant(montantMax);
+let limit = 20; // Au lieu de 10
 ```
 
-### Modifier le Port par Défaut
+### Ajouter un Nouvel Utilisateur
 
-Dans `server.js` :
+Éditez `data/users.json` :
 
 ```javascript
-const PORT = process.env.PORT || 8080; // Changez 3000 en 8080
+const bcrypt = require('bcryptjs');
+const password = bcrypt.hashSync('motdepasse', 10);
+// Ajoutez dans users.json
 ```
 
 ---
 
 ## 🐛 Dépannage
 
-### Le serveur ne démarre pas
+### Impossible de se connecter
 
-**Erreur :** `Cannot find module 'express'`
+**Problème** : "Identifiants incorrects"
 
-**Solution :**
-```bash
-rm -rf node_modules package-lock.json
-npm install
-```
+**Solutions** :
+1. Vérifiez que `data/users.json` existe
+2. Utilisez `admin` / `admin123`
+3. Supprimez `data/users.json` et redémarrez le serveur
 
-### Les graphiques ne s'affichent pas
+### Les filtres ne fonctionnent pas
 
-**Causes possibles :**
-- Pas de connexion Internet (Chart.js chargé via CDN)
-- Erreur JavaScript dans la console
-
-**Solution :**
-1. Ouvrez la console (F12)
-2. Vérifiez les erreurs
-3. Assurez-vous que Chart.js est chargé
-4. Rechargez la page (Ctrl+F5)
-
-### Erreur d'import CSV
-
-**Erreur :** Colonnes mal détectées
-
-**Solution :**
-- Vérifiez le séparateur (`;` et non `,`)
-- Assurez-vous de l'encodage UTF-8
-- Vérifiez que la première ligne contient les en-têtes
+**Solution** :
+1. Vérifiez la console (F12)
+2. Rechargez la page (Ctrl+F5)
+3. Vérifiez que l'API répond : `GET /api/devis`
 
 ### Données perdues après redémarrage (Render)
 
-**Cause :** Système de fichiers éphémère sur Render gratuit
+**Cause** : Système de fichiers éphémère
 
-**Solution :**
+**Solution** :
 1. Ajoutez un disque persistant Render (1GB gratuit)
-2. Ou migrez vers une base de données (PostgreSQL/MongoDB)
+2. Ou migrez vers PostgreSQL
 
----
+### Pagination cassée
 
-## 🔐 Sécurité
-
-### Recommandations
-
-⚠️ **Cette application est conçue pour un usage local/interne**
-
-Pour un usage en production :
-- [ ] Ajoutez l'authentification (JWT, OAuth)
-- [ ] Validez les entrées utilisateur côté serveur
-- [ ] Utilisez HTTPS (Render fournit SSL automatique)
-- [ ] Limitez les requêtes (rate limiting)
-- [ ] Ajoutez des logs d'audit
-- [ ] Utilisez une vraie base de données
+**Solution** :
+1. Vérifiez que `limit` et `page` sont des nombres
+2. Rechargez les données avec `applyFilters()`
 
 ---
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues !
+Les contributions sont bienvenues !
 
-### Comment contribuer
-
-1. **Fork** le projet
-2. Créez une **branche** : `git checkout -b feature/nouvelle-fonctionnalite`
-3. **Commitez** : `git commit -m 'Ajout nouvelle fonctionnalité'`
-4. **Push** : `git push origin feature/nouvelle-fonctionnalite`
-5. Ouvrez une **Pull Request**
-
-### Idées de Contributions
-
-- 🔐 Système d'authentification
-- 💾 Support PostgreSQL/MongoDB
-- 📊 Nouveaux graphiques (évolution temporelle, etc.)
-- 🌍 Internationalisation (i18n)
-- 📱 Application mobile (React Native)
-- 🎨 Thèmes personnalisables
-- 📧 Notifications par email
-- 📄 Export PDF des devis
-
----
-
-## 📝 Licence
-
-Ce projet est sous licence **MIT**.
-
-Vous êtes libre de :
-- ✅ Utiliser commercialement
-- ✅ Modifier
-- ✅ Distribuer
-- ✅ Utiliser en privé
-
----
-
-## 🙏 Remerciements
-
-- **[Chart.js](https://www.chartjs.org/)** - Graphiques interactifs magnifiques
-- **[Express.js](https://expressjs.com/)** - Framework web robuste et minimaliste
-- **[Node.js](https://nodejs.org/)** - Environnement d'exécution JavaScript
-- **[Render.com](https://render.com/)** - Plateforme de déploiement gratuite
-
----
-
-## 📞 Support
-
-Besoin d'aide ? Plusieurs options :
-
-- 📖 Lisez la [documentation complète](https://github.com/0x7b4/DashDevis/blob/main/README.md)
-- 📘 Consultez le [guide de déploiement](https://github.com/0x7b4/DashDevis/blob/main/DEPLOYMENT_GUIDE.md)
-- 🐛 Ouvrez une [issue GitHub](https://github.com/0x7b4/DashDevis/issues)
-- 💬 Contactez le développeur
-
----
-
-## 🔗 Liens Utiles
-
-- **Repository GitHub** : [https://github.com/0x7b4/DashDevis](https://github.com/0x7b4/DashDevis)
-- **Render Dashboard** : [https://dashboard.render.com](https://dashboard.render.com)
-- **Chart.js Docs** : [https://www.chartjs.org/docs/](https://www.chartjs.org/docs/)
-- **Express Docs** : [https://expressjs.com/](https://expressjs.com/)
-- **Node.js Docs** : [https://nodejs.org/docs/](https://nodejs.org/docs/)
-
----
-
-## 📊 Statistiques du Projet
-
-- **Langages** : JavaScript (100%)
-- **Framework Backend** : Express.js
-- **Bibliothèque Graphiques** : Chart.js 4.4.0
-- **Stockage** : JSON (fichier local)
-- **Format d'échange** : CSV
-- **Fichiers** : 9 fichiers principaux
-- **Lignes de code** : ~1500 lignes
+### Comment Contribuer
+1. Fork le projet
+2. Créez une branche : `git checkout -b feature/ma-fonctionnalite`
+3. Commitez : `git commit -m 'Ajout fonctionnalité'`
+4. Push : `git push origin feature/ma-fonctionnalite`
+5. Ouvrez une Pull Request
 
 ---
 
 ## 🎯 Roadmap
 
-### Version Actuelle : 2.1
+### ✅ Version 2.2 (Actuelle)
+- [x] Authentification utilisateur
+- [x] Recherche globale
+- [x] Filtres avancés
+- [x] Tri par colonnes
+- [x] Pagination
 
-✅ CRUD complet  
-✅ 2 graphiques KPI (Donut + Barres)  
-✅ 6 statistiques temps réel  
-✅ Import/Export CSV  
-✅ Interface responsive  
-✅ Déploiement Render  
-
-### Prochaines Versions
-
-#### Version 2.2 (Court terme)
-- [ ] Authentification utilisateur
-- [ ] Filtre et recherche dans le tableau
-- [ ] Tri par colonnes
-- [ ] Pagination du tableau
-
-#### Version 3.0 (Moyen terme)
-- [ ] Base de données PostgreSQL
+### 📋 Version 2.3 (Prochaine)
 - [ ] Multi-utilisateurs
 - [ ] Rôles et permissions
+- [ ] Changement de mot de passe
+- [ ] Logs d'activité
+
+### 🚀 Version 3.0 (Futur)
+- [ ] Base de données PostgreSQL
 - [ ] Export PDF
 - [ ] Emails automatiques
-
-#### Version 4.0 (Long terme)
+- [ ] Dashboard avancé
 - [ ] API GraphQL
-- [ ] Application mobile
-- [ ] Mode sombre
-- [ ] Multi-langue
-- [ ] Tableau de bord avancé
 
 ---
 
-**⭐ Si ce projet vous plaît, donnez-lui une étoile sur GitHub !**
+## 📝 Changelog
+
+### Version 2.2.0 (2025-11-22)
+- ✨ Ajout authentification avec express-session et bcryptjs
+- ✨ Ajout recherche globale instantanée
+- ✨ Ajout filtres par statut et dates
+- ✨ Ajout tri par colonnes (cliquer sur en-têtes)
+- ✨ Ajout pagination (10 par page)
+- 🔒 Protection de toutes les routes API
+- 📊 Ajout endpoint `/api/stats`
+- 🎨 Page de login sécurisée
+
+### Version 2.1.0 (2025-11-22)
+- ✨ Ajout 2 graphiques KPI (Donut + Barres)
+- 📊 Ajout 6 statistiques temps réel
+- 🎨 Amélioration design interface
+- 📝 Documentation complète
+
+### Version 2.0.0 (2025-11-22)
+- 🚀 Première version publique
+- ✅ CRUD complet
+- 📥 Import/Export CSV
+- 💾 Sauvegarde automatique JSON
 
 ---
 
-**Version** : 2.1.0  
-**Dernière mise à jour** : Novembre 2025  
+## 📞 Support
+
+- 📖 [Documentation complète](https://github.com/0x7b4/DashDevis/blob/main/README.md)
+- 📘 [Guide de déploiement](https://github.com/0x7b4/DashDevis/blob/main/DEPLOYMENT_GUIDE.md)
+- 🐛 [Signaler un bug](https://github.com/0x7b4/DashDevis/issues)
+
+---
+
+## 📝 Licence
+
+MIT License - Vous êtes libre d'utiliser, modifier et distribuer ce projet.
+
+---
+
+## 🔗 Liens Utiles
+
+- **Repository** : [github.com/0x7b4/DashDevis](https://github.com/0x7b4/DashDevis)
+- **Render** : [dashboard.render.com](https://dashboard.render.com)
+- **Chart.js** : [chartjs.org](https://www.chartjs.org/)
+- **Express** : [expressjs.com](https://expressjs.com/)
+
+---
+
+**⭐ Si ce projet vous aide, donnez-lui une étoile sur GitHub !**
+
+---
+
+**Version** : 2.2.0  
+**Dernière mise à jour** : 22 Novembre 2025  
 **Auteur** : 0x7b4  
 **Licence** : MIT
