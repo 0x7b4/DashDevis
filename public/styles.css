@@ -93,7 +93,7 @@ header h1 {
 
 .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 20px;
     padding: 30px;
     background: #f8fafc;
@@ -121,6 +121,104 @@ header h1 {
 .stat-card p {
     color: #64748b;
     font-weight: 600;
+}
+
+.stat-card-large h3 {
+    font-size: 2em;
+    color: #10b981;
+}
+
+/* Section KPI */
+.kpi-section {
+    padding: 30px;
+    background: #f8fafc;
+}
+
+.kpi-section h2 {
+    color: #1e293b;
+    margin-bottom: 25px;
+    font-size: 1.8em;
+}
+
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 25px;
+}
+
+.chart-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.chart-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.chart-card h3 {
+    color: #334155;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 10px;
+}
+
+.chart-card-wide {
+    grid-column: span 2;
+}
+
+/* Progress Circle */
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.progress-circle {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+}
+
+.progress-circle svg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.progress-bg {
+    fill: none;
+    stroke: #e5e7eb;
+    stroke-width: 8;
+}
+
+.progress-bar {
+    fill: none;
+    stroke: #10b981;
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 283;
+    stroke-dashoffset: 283;
+    transition: stroke-dashoffset 1s ease;
+}
+
+.progress-text {
+    transform: rotate(90deg) translate(0px, -50px);
+    font-size: 24px;
+    font-weight: bold;
+    fill: #667eea;
+}
+
+.progress-label {
+    color: #64748b;
+    font-weight: 600;
+    text-align: center;
 }
 
 .table-container {
@@ -284,6 +382,14 @@ tbody tr:hover {
     .header-actions {
         width: 100%;
         margin-top: 15px;
+    }
+
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card-wide {
+        grid-column: span 1;
     }
 
     table {
