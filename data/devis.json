@@ -1,182 +1,152 @@
 [
   {
-    "id": "1700000100000",
+    "id": "1700000000001",
     "date": "2025-11-20",
     "numeroSinistre": "SIN001",
     "numeroOR": "OR1001",
     "garage": "Garage Dupont",
-    "montant": "623.45",
+    "montant": 937.5,
     "statut": "Validé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   },
   {
-    "id": "1700000200000",
+    "id": "1700000000002",
     "date": "2025-11-18",
     "numeroSinistre": "SIN002",
     "numeroOR": "OR1002",
     "garage": "Auto Plus",
-    "montant": "746.9",
+    "montant": 1075.0,
     "statut": "Terminé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": "Devis de démo"
   },
   {
-    "id": "1700000300000",
+    "id": "1700000000003",
     "date": "2025-11-16",
     "numeroSinistre": "SIN003",
     "numeroOR": "OR1003",
     "garage": "Garage Rapide",
-    "montant": "870.35",
+    "montant": 1212.5,
     "statut": "En étude",
-    "commentaires": "Devis exemple 3",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   },
   {
-    "id": "1700000400000",
+    "id": "1700000000004",
     "date": "2025-11-14",
     "numeroSinistre": "SIN004",
     "numeroOR": "OR1004",
     "garage": "Carrosserie Pro",
-    "montant": "993.8",
+    "montant": 1350.0,
     "statut": "Validé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": "Devis de démo"
   },
   {
-    "id": "1700000500000",
+    "id": "1700000000005",
     "date": "2025-11-12",
     "numeroSinistre": "SIN005",
     "numeroOR": "OR1005",
-    "garage": "Garage Central",
-    "montant": "1117.25",
+    "garage": "Garage Martin",
+    "montant": 1487.5,
     "statut": "Terminé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   },
   {
-    "id": "1700000600000",
+    "id": "1700000000006",
     "date": "2025-11-10",
     "numeroSinistre": "SIN006",
     "numeroOR": "OR1006",
-    "garage": "Meca Expert",
-    "montant": "1240.7",
+    "garage": "Garage Dupont",
+    "montant": 1625.0,
     "statut": "En étude",
-    "commentaires": "Devis exemple 6",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": "Devis de démo"
   },
   {
-    "id": "1700000700000",
+    "id": "1700000000007",
     "date": "2025-11-08",
     "numeroSinistre": "SIN007",
     "numeroOR": "OR1007",
-    "garage": "Garage Martin",
-    "montant": "1364.15",
+    "garage": "Auto Plus",
+    "montant": 1762.5,
     "statut": "Validé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   },
   {
-    "id": "1700000800000",
+    "id": "1700000000008",
     "date": "2025-11-06",
     "numeroSinistre": "SIN008",
     "numeroOR": "OR1008",
-    "garage": "Garage Dupont",
-    "montant": "1487.6",
+    "garage": "Garage Rapide",
+    "montant": 1900.0,
     "statut": "Terminé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": "Devis de démo"
   },
   {
-    "id": "1700000900000",
+    "id": "1700000000009",
     "date": "2025-11-04",
     "numeroSinistre": "SIN009",
     "numeroOR": "OR1009",
-    "garage": "Auto Plus",
-    "montant": "1611.05",
+    "garage": "Carrosserie Pro",
+    "montant": 2037.5,
     "statut": "En étude",
-    "commentaires": "Devis exemple 9",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   },
   {
-    "id": "1700001000000",
+    "id": "1700000000010",
     "date": "2025-11-02",
     "numeroSinistre": "SIN010",
     "numeroOR": "OR1010",
-    "garage": "Garage Rapide",
-    "montant": "1734.5",
+    "garage": "Garage Martin",
+    "montant": 2175.0,
     "statut": "Validé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": "Devis de démo"
   },
   {
-    "id": "1700001100000",
+    "id": "1700000000011",
     "date": "2025-10-31",
     "numeroSinistre": "SIN011",
     "numeroOR": "OR1011",
-    "garage": "Carrosserie Pro",
-    "montant": "1857.95",
+    "garage": "Garage Dupont",
+    "montant": 2312.5,
     "statut": "Terminé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   },
   {
-    "id": "1700001200000",
+    "id": "1700000000012",
     "date": "2025-10-29",
     "numeroSinistre": "SIN012",
     "numeroOR": "OR1012",
-    "garage": "Garage Central",
-    "montant": "1981.4",
+    "garage": "Auto Plus",
+    "montant": 2450.0,
     "statut": "En étude",
-    "commentaires": "Devis exemple 12",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": "Devis de démo"
   },
   {
-    "id": "1700001300000",
+    "id": "1700000000013",
     "date": "2025-10-27",
     "numeroSinistre": "SIN013",
     "numeroOR": "OR1013",
-    "garage": "Meca Expert",
-    "montant": "2104.85",
+    "garage": "Garage Rapide",
+    "montant": 2587.5,
     "statut": "Validé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   },
   {
-    "id": "1700001400000",
+    "id": "1700000000014",
     "date": "2025-10-25",
     "numeroSinistre": "SIN014",
     "numeroOR": "OR1014",
-    "garage": "Garage Martin",
-    "montant": "2228.3",
+    "garage": "Carrosserie Pro",
+    "montant": 2725.0,
     "statut": "Terminé",
-    "commentaires": "",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": "Devis de démo"
   },
   {
-    "id": "1700001500000",
+    "id": "1700000000015",
     "date": "2025-10-23",
     "numeroSinistre": "SIN015",
     "numeroOR": "OR1015",
-    "garage": "Garage Dupont",
-    "montant": "2351.75",
+    "garage": "Garage Martin",
+    "montant": 2862.5,
     "statut": "En étude",
-    "commentaires": "Devis exemple 15",
-    "createdBy": "admin",
-    "createdAt": "2025-11-22T10:00:00.000Z"
+    "commentaires": ""
   }
 ]
