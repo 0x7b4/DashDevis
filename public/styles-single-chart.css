@@ -1,43 +1,41 @@
-/* Grille donut: aligné à gauche sur desktop, centré sur mobile */
 .charts-grid-single {
     display: flex;
-    justify-content: flex-start; /* aligné à gauche sur grand écran */
+    justify-content: flex-start;
     align-items: center;
 }
 
 .chart-card-single {
     background: white;
-    padding: 10px;
-    border-radius: 15px;
+    padding: 8px;
+    border-radius: 12px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s;
-    max-width: 210px;
+    max-width: 220px; /* conteneur étroit */
     width: 100%;
-    margin-left: 10px; /* petit décalage depuis le bord */
+    margin-left: 10px;
 }
 
 .chart-card-single canvas {
-    max-width: 180px;
-    max-height: 180px;
+    max-width: 180px;  /* largeur max réduite */
+    max-height: 140px; /* hauteur plus faible pour barres plus compactes */
+    margin: 0 auto;
 }
 
 .chart-card-single:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
 }
 
-/* Sur mobile: on recentre */
 @media (max-width: 768px) {
     .charts-grid-single {
         justify-content: center;
     }
     .chart-card-single {
-        max-width: 220px;
+        max-width: 260px;
         padding: 10px;
         margin-left: 0;
     }
     .chart-card-single canvas {
-        max-width: 180px;
-        max-height: 180px;
+        max-width: 220px;
+        max-height: 160px;
     }
 }
