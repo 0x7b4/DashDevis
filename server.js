@@ -131,7 +131,6 @@ app.get('/api/export/csv', (req, res) => {
   }
 });
 
-const upload = multer({ dest: 'uploads/' });
 
 app.post('/api/import/csv', upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'Fichier manquant' });
