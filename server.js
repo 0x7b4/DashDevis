@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const bcrypt = require('bcryptjs');
 const fs = require('fs');
 const path = require('path');
 const csv = require('csv-parser');
@@ -9,49 +11,182 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data', 'devis.json');
+const USERS_FILE = path.join(__dirname, 'data', 'users.json');
 
 // Configuration
 app.use(bodyParser.json());
-app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// Créer le dossier data s'il n'existe pas
-if (!fs.existsSync('data')) {
-    fs.mkdirSync('data');
+// Session
+app.use(session({
+    secret: 'dashdevis-secret-key-2024',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { 
+        maxAge: 24 * 60 * 60 * 1000, // 24 heures
+        secure: process.env.NODE_ENV === 'production'
+    }
+}));
+
+// Créer les dossiers nécessaires
+if (!fs.existsSync('data')) fs.mkdirSync('data');
+if (!fs.existsSync('uploads')) fs.mkdirSync('uploads');
+
+// Initialiser les fichiers
+if (!fs.existsSync(DATA_FILE)) fs.writeFileSync(DATA_FILE, JSON.stringify([]));
+if (!fs.existsSync(USERS_FILE)) {
+    // Créer un utilisateur par défaut: admin / admin123
+    const defaultUser = {
+        id: '1',
+        username: 'admin',
+        password: bcrypt.hashSync('admin123', 10),
+        email: 'admin@dashdevis.com'
+    };
+    fs.writeFileSync(USERS_FILE, JSON.stringify([defaultUser], null, 2));
 }
 
-// Initialiser le fichier de données s'il n'existe pas
-if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify([]));
-}
-
-// Configuration Multer pour l'upload CSV
+// Configuration Multer
 const upload = multer({ dest: 'uploads/' });
 
-// Fonction de sauvegarde automatique
+// Middleware d'authentification
+function requireAuth(req, res, next) {
+    if (req.session && req.session.userId) {
+        return next();
+    }
+    res.status(401).json({ error: 'Non autorisé' });
+}
+
+// Fonctions helpers
 function saveData(data) {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
 }
 
-// Fonction de lecture des données
 function loadData() {
     try {
-        const data = fs.readFileSync(DATA_FILE, 'utf8');
-        return JSON.parse(data);
+        return JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
     } catch (error) {
         return [];
     }
 }
 
-// Routes API
+function loadUsers() {
+    try {
+        return JSON.parse(fs.readFileSync(USERS_FILE, 'utf8'));
+    } catch (error) {
+        return [];
+    }
+}
 
-// GET - Récupérer tous les devis
-app.get('/api/devis', (req, res) => {
-    const devis = loadData();
-    res.json(devis);
+// Routes d'authentification
+app.post('/api/auth/login', (req, res) => {
+    const { username, password } = req.body;
+    const users = loadUsers();
+    const user = users.find(u => u.username === username);
+
+    if (!user || !bcrypt.compareSync(password, user.password)) {
+        return res.status(401).json({ error: 'Identifiants incorrects' });
+    }
+
+    req.session.userId = user.id;
+    req.session.username = user.username;
+
+    res.json({ 
+        success: true, 
+        user: { id: user.id, username: user.username, email: user.email }
+    });
 });
 
-// GET - Récupérer un devis par ID
-app.get('/api/devis/:id', (req, res) => {
+app.post('/api/auth/logout', (req, res) => {
+    req.session.destroy();
+    res.json({ success: true });
+});
+
+app.get('/api/auth/check', (req, res) => {
+    if (req.session && req.session.userId) {
+        const users = loadUsers();
+        const user = users.find(u => u.id === req.session.userId);
+        res.json({ 
+            authenticated: true, 
+            user: { id: user.id, username: user.username, email: user.email }
+        });
+    } else {
+        res.json({ authenticated: false });
+    }
+});
+
+// Servir la page de login
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'login.html'));
+});
+
+// Middleware pour servir les fichiers statiques seulement si authentifié
+app.use((req, res, next) => {
+    if (req.path === '/login' || req.path.startsWith('/api/auth')) {
+        return next();
+    }
+    if (req.path.startsWith('/api')) {
+        return requireAuth(req, res, next);
+    }
+    if (req.session && req.session.userId) {
+        return next();
+    }
+    res.redirect('/login');
+});
+
+app.use(express.static('public'));
+
+// Routes API Devis (protégées)
+app.get('/api/devis', requireAuth, (req, res) => {
+    const devis = loadData();
+
+    // Filtres
+    let filtered = devis;
+    const { search, statut, dateDebut, dateFin, page = 1, limit = 10 } = req.query;
+
+    // Recherche globale
+    if (search) {
+        const searchLower = search.toLowerCase();
+        filtered = filtered.filter(d => 
+            d.numeroSinistre.toLowerCase().includes(searchLower) ||
+            d.numeroOR.toLowerCase().includes(searchLower) ||
+            d.garage.toLowerCase().includes(searchLower) ||
+            d.commentaires.toLowerCase().includes(searchLower)
+        );
+    }
+
+    // Filtre par statut
+    if (statut && statut !== 'tous') {
+        filtered = filtered.filter(d => d.statut === statut);
+    }
+
+    // Filtre par date
+    if (dateDebut) {
+        filtered = filtered.filter(d => d.date >= dateDebut);
+    }
+    if (dateFin) {
+        filtered = filtered.filter(d => d.date <= dateFin);
+    }
+
+    // Pagination
+    const total = filtered.length;
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+    const startIndex = (pageNum - 1) * limitNum;
+    const endIndex = startIndex + limitNum;
+    const paginated = filtered.slice(startIndex, endIndex);
+
+    res.json({
+        data: paginated,
+        pagination: {
+            total,
+            page: pageNum,
+            limit: limitNum,
+            totalPages: Math.ceil(total / limitNum)
+        }
+    });
+});
+
+app.get('/api/devis/:id', requireAuth, (req, res) => {
     const devis = loadData();
     const item = devis.find(d => d.id === req.params.id);
     if (item) {
@@ -61,8 +196,7 @@ app.get('/api/devis/:id', (req, res) => {
     }
 });
 
-// POST - Créer un nouveau devis
-app.post('/api/devis', (req, res) => {
+app.post('/api/devis', requireAuth, (req, res) => {
     const devis = loadData();
     const newDevis = {
         id: Date.now().toString(),
@@ -72,15 +206,16 @@ app.post('/api/devis', (req, res) => {
         garage: req.body.garage,
         montant: req.body.montant,
         statut: req.body.statut || 'En étude',
-        commentaires: req.body.commentaires || ''
+        commentaires: req.body.commentaires || '',
+        createdBy: req.session.username,
+        createdAt: new Date().toISOString()
     };
     devis.push(newDevis);
     saveData(devis);
     res.status(201).json(newDevis);
 });
 
-// PUT - Mettre à jour un devis
-app.put('/api/devis/:id', (req, res) => {
+app.put('/api/devis/:id', requireAuth, (req, res) => {
     const devis = loadData();
     const index = devis.findIndex(d => d.id === req.params.id);
 
@@ -93,7 +228,9 @@ app.put('/api/devis/:id', (req, res) => {
             garage: req.body.garage,
             montant: req.body.montant,
             statut: req.body.statut,
-            commentaires: req.body.commentaires
+            commentaires: req.body.commentaires,
+            updatedBy: req.session.username,
+            updatedAt: new Date().toISOString()
         };
         saveData(devis);
         res.json(devis[index]);
@@ -102,8 +239,7 @@ app.put('/api/devis/:id', (req, res) => {
     }
 });
 
-// DELETE - Supprimer un devis
-app.delete('/api/devis/:id', (req, res) => {
+app.delete('/api/devis/:id', requireAuth, (req, res) => {
     let devis = loadData();
     const initialLength = devis.length;
     devis = devis.filter(d => d.id !== req.params.id);
@@ -117,7 +253,7 @@ app.delete('/api/devis/:id', (req, res) => {
 });
 
 // Export CSV
-app.get('/api/export/csv', (req, res) => {
+app.get('/api/export/csv', requireAuth, (req, res) => {
     const devis = loadData();
 
     if (devis.length === 0) {
@@ -127,18 +263,18 @@ app.get('/api/export/csv', (req, res) => {
     try {
         const fields = ['date', 'numeroSinistre', 'numeroOR', 'garage', 'montant', 'statut', 'commentaires'];
         const opts = { fields, delimiter: ';' };
-        const csv = parse(devis, opts);
+        const csvData = parse(devis, opts);
 
         res.header('Content-Type', 'text/csv; charset=utf-8');
         res.header('Content-Disposition', 'attachment; filename=devis_export.csv');
-        res.send('\ufeff' + csv); // BOM pour Excel
+        res.send('\ufeff' + csvData);
     } catch (error) {
         res.status(500).json({ error: 'Erreur lors de l\'export' });
     }
 });
 
 // Import CSV
-app.post('/api/import/csv', upload.single('file'), (req, res) => {
+app.post('/api/import/csv', requireAuth, upload.single('file'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ error: 'Aucun fichier fourni' });
     }
@@ -148,7 +284,6 @@ app.post('/api/import/csv', upload.single('file'), (req, res) => {
     fs.createReadStream(req.file.path)
         .pipe(csv({ separator: ';' }))
         .on('data', (data) => {
-            // Normaliser les noms de colonnes
             const normalized = {
                 id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
                 date: data.date || data.Date || new Date().toISOString().split('T')[0],
@@ -157,7 +292,9 @@ app.post('/api/import/csv', upload.single('file'), (req, res) => {
                 garage: data.garage || data.Garage || '',
                 montant: data.montant || data.Montant || '',
                 statut: data.statut || data.Statut || 'En étude',
-                commentaires: data.commentaires || data.Commentaires || ''
+                commentaires: data.commentaires || data.Commentaires || '',
+                createdBy: req.session.username,
+                createdAt: new Date().toISOString()
             };
             results.push(normalized);
         })
@@ -166,7 +303,6 @@ app.post('/api/import/csv', upload.single('file'), (req, res) => {
             const updatedDevis = [...currentDevis, ...results];
             saveData(updatedDevis);
 
-            // Supprimer le fichier uploadé
             fs.unlinkSync(req.file.path);
 
             res.json({ 
@@ -179,8 +315,25 @@ app.post('/api/import/csv', upload.single('file'), (req, res) => {
         });
 });
 
+// Statistiques
+app.get('/api/stats', requireAuth, (req, res) => {
+    const devis = loadData();
+
+    const stats = {
+        total: devis.length,
+        enEtude: devis.filter(d => d.statut === 'En étude').length,
+        valides: devis.filter(d => d.statut === 'Validé').length,
+        termines: devis.filter(d => d.statut === 'Terminé').length,
+        montantTotal: devis.reduce((sum, d) => sum + parseFloat(d.montant || 0), 0),
+        montantMoyen: devis.length > 0 ? devis.reduce((sum, d) => sum + parseFloat(d.montant || 0), 0) / devis.length : 0
+    };
+
+    res.json(stats);
+});
+
 // Démarrer le serveur
 app.listen(PORT, () => {
-    console.log(`🚀 Serveur démarré sur http://localhost:${PORT}`);
-    console.log(`📊 Dashboard accessible sur http://localhost:${PORT}`);
+    console.log(`🚀 Serveur DashDevis v2.2 démarré sur http://localhost:${PORT}`);
+    console.log(`📊 Dashboard accessible après authentification`);
+    console.log(`🔐 Identifiants par défaut: admin / admin123`);
 });
