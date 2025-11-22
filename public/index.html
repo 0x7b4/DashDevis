@@ -1,130 +1,127 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DashDevis v2.2</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DashDevis - Simple</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div>
-                <h1>📊 DashDevis v2.2</h1>
-                <small id="userInfo" style="opacity: 0.8;"></small>
-            </div>
-            <div class="header-actions">
-                <button onclick="exportCSV()" class="btn btn-secondary">📥 Exporter</button>
-                <button onclick="document.getElementById('importFile').click()" class="btn btn-secondary">📤 Importer</button>
-                <input type="file" id="importFile" accept=".csv" style="display: none;" onchange="importCSV(event)">
-                <button onclick="showAddModal()" class="btn btn-primary">➕ Nouveau</button>
-                <button onclick="logout()" class="btn btn-danger">🚪 Déconnexion</button>
-            </div>
-        </header>
+  <div class="container">
+    <header>
+      <div>
+        <h1>📊 DashDevis</h1>
+        <small>Dashboard simple de gestion des devis</small>
+      </div>
+      <div class="header-actions">
+        <button onclick="exportCSV()" class="btn btn-secondary">📥 Exporter</button>
+        <button onclick="document.getElementById('importFile').click()" class="btn btn-secondary">📤 Importer</button>
+        <input type="file" id="importFile" accept=".csv" style="display:none" onchange="importCSV(event)" />
+        <button onclick="showAddModal()" class="btn btn-primary">➕ Nouveau</button>
+      </div>
+    </header>
 
-        <div class="stats">
-            <div class="stat-card"><h3 id="totalDevis">0</h3><p>Total</p></div>
-            <div class="stat-card"><h3 id="enEtude">0</h3><p>En étude</p></div>
-            <div class="stat-card"><h3 id="valides">0</h3><p>Validés</p></div>
-            <div class="stat-card"><h3 id="termines">0</h3><p>Terminés</p></div>
-            <div class="stat-card stat-card-large"><h3 id="montantTotal">0 €</h3><p>Total €</p></div>
-            <div class="stat-card stat-card-large"><h3 id="montantMoyen">0 €</h3><p>Moyen €</p></div>
-        </div>
-
-        <div class="kpi-section">
-            <h2>📈 Répartition des Devis par Statut</h2>
-            <div class="charts-grid-single">
-                <div class="chart-card-single">
-                    <canvas id="statusChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-        <!-- Filtres et recherche -->
-        <div class="filters-section">
-            <h2>🔍 Filtres</h2>
-            <div class="filters-grid">
-                <input type="text" id="searchInput" placeholder="🔍 Rechercher..." onkeyup="applyFilters()">
-                <select id="statutFilter" onchange="applyFilters()">
-                    <option value="tous">Tous les statuts</option>
-                    <option value="En étude">En étude</option>
-                    <option value="Validé">Validé</option>
-                    <option value="Terminé">Terminé</option>
-                </select>
-                <input type="date" id="dateDebut" onchange="applyFilters()" placeholder="Date début">
-                <input type="date" id="dateFin" onchange="applyFilters()" placeholder="Date fin">
-                <button onclick="resetFilters()" class="btn btn-secondary">🔄 Réinitialiser</button>
-            </div>
-        </div>
-
-        <div class="table-container">
-            <table id="devisTable">
-                <thead>
-                    <tr>
-                        <th onclick="sortTable('date')">Date ⬍</th>
-                        <th onclick="sortTable('numeroSinistre')">N° Sinistre ⬍</th>
-                        <th onclick="sortTable('numeroOR')">N° OR ⬍</th>
-                        <th onclick="sortTable('garage')">Garage ⬍</th>
-                        <th onclick="sortTable('montant')">Montant ⬍</th>
-                        <th onclick="sortTable('statut')">Statut ⬍</th>
-                        <th>Commentaires</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="devisTableBody"></tbody>
-            </table>
-
-            <div class="pagination" id="pagination"></div>
-        </div>
+    <div class="stats">
+      <div class="stat-card"><h3 id="totalDevis">0</h3><p>Total</p></div>
+      <div class="stat-card"><h3 id="enEtude">0</h3><p>En étude</p></div>
+      <div class="stat-card"><h3 id="valides">0</h3><p>Validés</p></div>
+      <div class="stat-card"><h3 id="termines">0</h3><p>Terminés</p></div>
+      <div class="stat-card stat-card-large"><h3 id="montantTotal">0 €</h3><p>Total €</p></div>
+      <div class="stat-card stat-card-large"><h3 id="montantMoyen">0 €</h3><p>Moyen €</p></div>
     </div>
 
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="modalTitle">Nouveau Devis</h2>
-            <form id="devisForm" onsubmit="saveDevis(event)">
-                <input type="hidden" id="devisId">
-                <div class="form-group">
-                    <label>Date:</label>
-                    <input type="date" id="date" required>
-                </div>
-                <div class="form-group">
-                    <label>N° de Sinistre:</label>
-                    <input type="text" id="numeroSinistre" required>
-                </div>
-                <div class="form-group">
-                    <label>N° OR:</label>
-                    <input type="text" id="numeroOR" required>
-                </div>
-                <div class="form-group">
-                    <label>Garage:</label>
-                    <input type="text" id="garage" required>
-                </div>
-                <div class="form-group">
-                    <label>Montant (€):</label>
-                    <input type="number" id="montant" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label>Statut:</label>
-                    <select id="statut" required>
-                        <option value="En étude">En étude</option>
-                        <option value="Validé">Validé</option>
-                        <option value="Terminé">Terminé</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Commentaires:</label>
-                    <textarea id="commentaires" rows="3"></textarea>
-                </div>
-                <div class="form-actions">
-                    <button type="button" onclick="closeModal()" class="btn btn-secondary">Annuler</button>
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                </div>
-            </form>
+    <div class="kpi-section">
+      <h2>📈 Répartition des Devis par Statut</h2>
+      <div class="charts-grid-single">
+        <div class="chart-card-single">
+          <canvas id="statusChart"></canvas>
         </div>
+      </div>
     </div>
 
-    <script src="script-v2.2.js"></script>
+    <div class="filters-section">
+      <h2>🔍 Filtres</h2>
+      <div class="filters-grid">
+        <input type="text" id="searchInput" placeholder="🔍 Rechercher..." onkeyup="applyFilters()" />
+        <select id="statutFilter" onchange="applyFilters()">
+          <option value="tous">Tous les statuts</option>
+          <option value="En étude">En étude</option>
+          <option value="Validé">Validé</option>
+          <option value="Terminé">Terminé</option>
+        </select>
+        <input type="date" id="dateDebut" onchange="applyFilters()" />
+        <input type="date" id="dateFin" onchange="applyFilters()" />
+        <button onclick="resetFilters()" class="btn btn-secondary">🔄 Réinitialiser</button>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table id="devisTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('date')">Date ⬍</th>
+            <th onclick="sortTable('numeroSinistre')">N° Sinistre ⬍</th>
+            <th onclick="sortTable('numeroOR')">N° OR ⬍</th>
+            <th onclick="sortTable('garage')">Garage ⬍</th>
+            <th onclick="sortTable('montant')">Montant ⬍</th>
+            <th onclick="sortTable('statut')">Statut ⬍</th>
+            <th>Commentaires</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="devisTableBody"></tbody>
+      </table>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Nouveau Devis</h2>
+      <form id="devisForm" onsubmit="saveDevis(event)">
+        <input type="hidden" id="devisId" />
+        <div class="form-group">
+          <label>Date:</label>
+          <input type="date" id="date" required />
+        </div>
+        <div class="form-group">
+          <label>N° de Sinistre:</label>
+          <input type="text" id="numeroSinistre" required />
+        </div>
+        <div class="form-group">
+          <label>N° OR:</label>
+          <input type="text" id="numeroOR" required />
+        </div>
+        <div class="form-group">
+          <label>Garage:</label>
+          <input type="text" id="garage" required />
+        </div>
+        <div class="form-group">
+          <label>Montant (€):</label>
+          <input type="number" id="montant" step="0.01" required />
+        </div>
+        <div class="form-group">
+          <label>Statut:</label>
+          <select id="statut" required>
+            <option value="En étude">En étude</option>
+            <option value="Validé">Validé</option>
+            <option value="Terminé">Terminé</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Commentaires:</label>
+          <textarea id="commentaires" rows="3"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" onclick="closeModal()" class="btn btn-secondary">Annuler</button>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
