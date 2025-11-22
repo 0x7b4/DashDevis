@@ -1,6 +1,7 @@
+/* Grille donut: aligné à gauche sur desktop, centré sur mobile */
 .charts-grid-single {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* aligné à gauche sur grand écran */
     align-items: center;
 }
 
@@ -10,14 +11,14 @@
     border-radius: 15px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s;
-    max-width: 210px; /* encore plus petit sur desktop */
+    max-width: 210px;
     width: 100%;
+    margin-left: 10px; /* petit décalage depuis le bord */
 }
 
 .chart-card-single canvas {
     max-width: 180px;
     max-height: 180px;
-    margin: 0 auto;
 }
 
 .chart-card-single:hover {
@@ -25,11 +26,15 @@
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
-/* Mobile: on garde la taille précédente (~180px) */
+/* Sur mobile: on recentre */
 @media (max-width: 768px) {
+    .charts-grid-single {
+        justify-content: center;
+    }
     .chart-card-single {
         max-width: 220px;
         padding: 10px;
+        margin-left: 0;
     }
     .chart-card-single canvas {
         max-width: 180px;
