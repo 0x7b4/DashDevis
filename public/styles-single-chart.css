@@ -6,25 +6,26 @@
 
 .chart-card-single {
     background: white;
-    padding: 15px;
+    padding: 10px;
     border-radius: 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s;
-    max-width: 260px;
+    max-width: 210px; /* encore plus petit sur desktop */
     width: 100%;
 }
 
 .chart-card-single canvas {
-    max-width: 220px;
-    max-height: 220px;
+    max-width: 180px;
+    max-height: 180px;
     margin: 0 auto;
 }
 
 .chart-card-single:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.12);
 }
 
+/* Mobile: on garde la taille précédente (~180px) */
 @media (max-width: 768px) {
     .chart-card-single {
         max-width: 220px;
